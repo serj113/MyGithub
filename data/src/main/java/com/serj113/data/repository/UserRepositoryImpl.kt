@@ -3,7 +3,6 @@ package com.serj113.data.repository
 import com.serj113.data.api.GithubApi
 import com.serj113.data.model.toUserEntities
 import com.serj113.domain.base.Entity
-import com.serj113.domain.base.NetworkState
 import com.serj113.domain.entity.User
 import com.serj113.domain.repository.UserRepository
 import kotlinx.coroutines.Dispatchers
@@ -20,14 +19,12 @@ class UserRepositoryImpl @Inject constructor(
         page: Long,
         pageSize: Int
     ): Flow<Entity<List<User>>> = flow {
-        emit(Entity<List<User>>(null, null, NetworkState.LOADING))
-        val result = githubApi.searchUser(keyword, page, pageSize)
-        if (result.isSuccessful) {
-            result.body()?.let {
-                emit(Entity(it.items.toUserEntities(), null, NetworkState.SUCCESS))
-            }
-        } else {
-            emit(Entity<List<User>>(null, result.message(), NetworkState.ERROR))
+        emit(Entity.loading<List<User>>())
+        try {
+            val users = githubApi.searchUser(keyword, page, pageSize).items.toUserEntities()
+            emit(Entity.success(users))
+        } catch (t: Throwable) {
+            emit(Entity.error<List<User>>(t.localizedMessage))
         }
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(Dispatchers.Default)
 }

@@ -49,5 +49,10 @@ dependencies {
     // Hamkrest
     testImplementation "com.natpryce:hamkrest:$hamkrest_version"
 
+    // Elmyr
+    testImplementation "com.github.xgouchet.Elmyr:junit4:$elmyr_version"
+
     testImplementation "junit:junit:$junit_version"
+    testImplementation "androidx.arch.core:core-testing:2.0.0"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
 }

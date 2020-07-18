@@ -1,8 +1,9 @@
-package com.serj113.mygithub
+package com.serj113.mygithub.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.findNavController
+import com.serj113.mygithub.R
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
