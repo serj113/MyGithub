@@ -37,6 +37,7 @@ ext {
     navigation_app_version = '2.2.1'
     fragment_version = '1.2.4'
     lifecycle_version = '2.2.0'
+    circle_image_version = '3.1.0'
     retrofit_version = '2.7.0'
     moshi_version = '1.9.2'
     okhttp_version = '4.2.2'

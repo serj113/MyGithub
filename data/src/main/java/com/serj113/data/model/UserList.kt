@@ -2,11 +2,11 @@ package com.serj113.data.model
 
 import com.squareup.moshi.Json
 
-data class Response (
-    @Json(name = "incomplete_results")
+data class UserList (
+    @field:Json(name = "incomplete_results")
     var incompleteResults: Boolean,
-    @Json(name = "items")
+    @field:Json(name = "items")
     var items: List<Item>,
-    @Json(name = "total_count")
+    @field:Json(name = "total_count")
     var totalCount: Int
 )

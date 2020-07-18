@@ -1,47 +1,46 @@
 package com.serj113.data.model
 
-
 import com.serj113.domain.entity.User
 import com.squareup.moshi.Json
 
 data class Item(
-    @Json(name = "avatar_url")
+    @field:Json(name = "avatar_url")
     var avatarUrl: String,
-    @Json(name = "events_url")
+    @field:Json(name = "events_url")
     var eventsUrl: String,
-    @Json(name = "followers_url")
+    @field:Json(name = "followers_url")
     var followersUrl: String,
-    @Json(name = "following_url")
+    @field:Json(name = "following_url")
     var followingUrl: String,
-    @Json(name = "gists_url")
+    @field:Json(name = "gists_url")
     var gistsUrl: String,
-    @Json(name = "gravatar_id")
+    @field:Json(name = "gravatar_id")
     var gravatarId: String,
-    @Json(name = "html_url")
+    @field:Json(name = "html_url")
     var htmlUrl: String,
-    @Json(name = "id")
+    @field:Json(name = "id")
     var id: Int,
-    @Json(name = "login")
+    @field:Json(name = "login")
     var login: String,
-    @Json(name = "node_id")
+    @field:Json(name = "node_id")
     var nodeId: String,
-    @Json(name = "organizations_url")
+    @field:Json(name = "organizations_url")
     var organizationsUrl: String,
-    @Json(name = "received_events_url")
+    @field:Json(name = "received_events_url")
     var receivedEventsUrl: String,
-    @Json(name = "repos_url")
+    @field:Json(name = "repos_url")
     var reposUrl: String,
-    @Json(name = "score")
+    @field:Json(name = "score")
     var score: Int,
-    @Json(name = "site_admin")
+    @field:Json(name = "site_admin")
     var siteAdmin: Boolean,
-    @Json(name = "starred_url")
+    @field:Json(name = "starred_url")
     var starredUrl: String,
-    @Json(name = "subscriptions_url")
+    @field:Json(name = "subscriptions_url")
     var subscriptionsUrl: String,
-    @Json(name = "type")
+    @field:Json(name = "type")
     var type: String,
-    @Json(name = "url")
+    @field:Json(name = "url")
     var url: String
 )
 
