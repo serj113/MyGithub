@@ -17,10 +17,11 @@ class UserRepositoryImpl @Inject constructor(
 ) : UserRepository {
     override suspend fun searchUser(
         keyword: String,
-        page: Long
+        page: Long,
+        pageSize: Int
     ): Flow<Entity<List<User>>> = flow {
         emit(Entity<List<User>>(null, null, NetworkState.LOADING))
-        val result = githubApi.searchUser(keyword, page)
+        val result = githubApi.searchUser(keyword, page, pageSize)
         if (result.isSuccessful) {
             result.body()?.let {
                 emit(Entity(it.items.toUserEntities(), null, NetworkState.SUCCESS))

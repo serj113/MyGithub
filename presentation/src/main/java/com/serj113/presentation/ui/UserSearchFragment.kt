@@ -11,8 +11,11 @@ import androidx.lifecycle.Observer
 import com.serj113.presentation.databinding.UserSearchFragmentBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 
 @AndroidEntryPoint
+@FlowPreview
+@ExperimentalCoroutinesApi
 class UserSearchFragment : Fragment() {
 
     private lateinit var binding: UserSearchFragmentBinding
@@ -31,7 +34,6 @@ class UserSearchFragment : Fragment() {
         return binding.root
     }
 
-    @ExperimentalCoroutinesApi
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 

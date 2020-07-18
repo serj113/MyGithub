@@ -7,5 +7,9 @@ import javax.inject.Inject
 class SearchUserUseCaseImpl @Inject constructor(
     private var userRepository: UserRepository
 ) : SearchUserUseCase() {
-    override suspend fun invoke(args: Args) = userRepository.searchUser(args.keyword, args.page)
+    override suspend fun invoke(args: Args) = userRepository.searchUser(
+        args.keyword,
+        args.page,
+        args.pageSize
+    )
 }

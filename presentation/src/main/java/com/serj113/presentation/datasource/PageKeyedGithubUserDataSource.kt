@@ -12,7 +12,8 @@ import kotlinx.coroutines.launch
 
 class PageKeyedGithubUserDataSource constructor(
     private val searchUserUseCase: SearchUserUseCase,
-    private val query: String
+    private val query: String,
+    private val pageSize: Int
 ) : BaseDataSource<Long, User>() {
     override fun loadInitial(
         params: LoadInitialParams<Long>,
@@ -20,7 +21,7 @@ class PageKeyedGithubUserDataSource constructor(
     ) {
         val mutableListUsers = mutableListOf<User>()
         GlobalScope.launch(Dispatchers.Main) {
-            searchUserUseCase.invoke(SearchUserUseCase.Args(query, page))
+            searchUserUseCase.invoke(SearchUserUseCase.Args(query, page, pageSize))
                 .onEach { entity ->
                     entity.data?.let {
                         mutableListUsers.addAll(it)
@@ -37,7 +38,7 @@ class PageKeyedGithubUserDataSource constructor(
         val mutableListUsers = mutableListOf<User>()
         page += 1
         GlobalScope.launch(Dispatchers.Main) {
-            searchUserUseCase.invoke(SearchUserUseCase.Args(query, page))
+            searchUserUseCase.invoke(SearchUserUseCase.Args(query, page, pageSize))
                 .onEach { entity ->
                     entity.data?.let {
                         mutableListUsers.addAll(it)

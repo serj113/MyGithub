@@ -10,12 +10,16 @@ import androidx.paging.PagedList
 import com.serj113.domain.entity.User
 import com.serj113.domain.interactor.SearchUserUseCase
 import com.serj113.presentation.datasource.PageKeyedGithubUserDataSource
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
+@FlowPreview
+@ExperimentalCoroutinesApi
 class UserSearchViewModel @ViewModelInject constructor(
     private val searchUserUseCase: SearchUserUseCase
 ) : ViewModel() {
@@ -41,7 +45,8 @@ class UserSearchViewModel @ViewModelInject constructor(
             override fun create(): PageKeyedGithubUserDataSource {
                 return PageKeyedGithubUserDataSource(
                     searchUserUseCase,
-                    queryChannel.valueOrNull.orEmpty()
+                    queryChannel.valueOrNull.orEmpty(),
+                    PAGE_SIZE
                 ).also {
                     githubUserDataSource = it
                 }
