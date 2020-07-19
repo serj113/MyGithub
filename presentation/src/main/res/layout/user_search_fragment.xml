@@ -14,7 +14,11 @@
         <EditText
             android:id="@+id/query_edit_text"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:layout_margin="4dp"
+            android:hint="@string/hint_query_edit_text"/>
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

@@ -24,6 +24,7 @@ class PageKeyedGithubUserDataSource constructor(
         params: LoadInitialParams<Long>,
         callback: LoadInitialCallback<Long, User>
     ) {
+        if (query.isEmpty()) return
         val mutableListUsers = mutableListOf<User>()
         var isError = false
         postError("")
