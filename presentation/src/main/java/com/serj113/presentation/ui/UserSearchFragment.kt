@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -45,6 +46,9 @@ class UserSearchFragment : Fragment() {
 
         viewModel.searchPagedListLiveData.observe(viewLifecycleOwner, Observer {
             adapter.submitList(it)
+        })
+        viewModel.errorMessageLiveData.observe(viewLifecycleOwner, Observer {
+            if (it.isNotEmpty()) Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
         })
     }
 

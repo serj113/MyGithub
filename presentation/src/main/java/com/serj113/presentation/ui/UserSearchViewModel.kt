@@ -2,6 +2,7 @@ package com.serj113.presentation.ui
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.DataSource
@@ -25,6 +26,7 @@ class UserSearchViewModel @ViewModelInject constructor(
 ) : ViewModel() {
     val queryChannel = ConflatedBroadcastChannel<String>()
     val searchPagedListLiveData = initializeSearchListLiveData()
+    private val errorMessageMutableLiveData = MutableLiveData<String>()
     private var githubUserDataSource: PageKeyedGithubUserDataSource? = null
 
     init {
@@ -46,7 +48,8 @@ class UserSearchViewModel @ViewModelInject constructor(
                 return PageKeyedGithubUserDataSource(
                     searchUserUseCase,
                     queryChannel.valueOrNull.orEmpty(),
-                    PAGE_SIZE
+                    PAGE_SIZE,
+                    errorMessageMutableLiveData
                 ).also {
                     githubUserDataSource = it
                 }
@@ -55,6 +58,8 @@ class UserSearchViewModel @ViewModelInject constructor(
 
         return LivePagedListBuilder(dataSource, config).build()
     }
+
+    val errorMessageLiveData: LiveData<String> = errorMessageMutableLiveData
 
     companion object {
         private const val QUERY_DEBOUNCE = 500L
