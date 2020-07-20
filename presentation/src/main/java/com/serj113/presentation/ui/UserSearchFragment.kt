@@ -46,11 +46,8 @@ class UserSearchFragment : Fragment() {
 
         viewModel.searchPagedListLiveData.observe(viewLifecycleOwner, Observer {
             adapter.submitList(it)
-            if (adapter.itemCount == 0 && binding.queryEditText.text.isNotEmpty()) {
-                Toast.makeText(requireContext(), "User not found", Toast.LENGTH_LONG).show()
-            }
         })
-        viewModel.errorMessageLiveData.observe(viewLifecycleOwner, Observer {
+        viewModel.messageLiveData.observe(viewLifecycleOwner, Observer {
             if (it.isNotEmpty()) Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
         })
     }

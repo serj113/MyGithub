@@ -26,7 +26,7 @@ class UserSearchViewModel @ViewModelInject constructor(
 ) : ViewModel() {
     val queryChannel = ConflatedBroadcastChannel<String>()
     val searchPagedListLiveData = initializeSearchListLiveData()
-    private val errorMessageMutableLiveData = MutableLiveData<String>()
+    private val messageMutableLiveData = MutableLiveData<String>()
     private var githubUserDataSource: PageKeyedGithubUserDataSource? = null
 
     init {
@@ -49,7 +49,7 @@ class UserSearchViewModel @ViewModelInject constructor(
                     searchUserUseCase,
                     queryChannel.valueOrNull.orEmpty(),
                     PAGE_SIZE,
-                    errorMessageMutableLiveData
+                    messageMutableLiveData
                 ).also {
                     githubUserDataSource = it
                 }
@@ -59,7 +59,7 @@ class UserSearchViewModel @ViewModelInject constructor(
         return LivePagedListBuilder(dataSource, config).build()
     }
 
-    val errorMessageLiveData: LiveData<String> = errorMessageMutableLiveData
+    val messageLiveData: LiveData<String> = messageMutableLiveData
 
     companion object {
         private const val QUERY_DEBOUNCE = 500L

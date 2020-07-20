@@ -1,19 +1,25 @@
-package com.serj113.mygithub
+package com.serj113.mygithub.ui
 
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import androidx.test.espresso.Espresso
-import androidx.test.espresso.IdlingRegistry
+import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
-import com.jakewharton.espresso.OkHttp3IdlingResource
-import com.serj113.mygithub.ui.MainActivity
+import com.serj113.data.di.UrlModule
+import com.serj113.mygithub.FileReader
+import com.serj113.mygithub.R
+import dagger.hilt.android.testing.BindValue
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.UninstallModules
+import okhttp3.mockwebserver.Dispatcher
+import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
+import okhttp3.mockwebserver.RecordedRequest
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers
@@ -25,27 +31,26 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-@LargeTest
 @RunWith(AndroidJUnit4::class)
+@UninstallModules(UrlModule::class)
 @HiltAndroidTest
 class MainActivityTest {
     @get:Rule(order=0)
     var hiltRule = HiltAndroidRule(this)
 
     @get:Rule(order=1)
+    @JvmField
     var mActivityTestRule = ActivityTestRule(MainActivity::class.java, true, false)
+
+    @BindValue
+    @JvmField
+    val testingUrl: String = "http://127.0.0.1:8080"
 
     private val mockWebServer = MockWebServer()
 
     @Before
     fun setup() {
         mockWebServer.start(8080)
-        IdlingRegistry.getInstance().register(
-            OkHttp3IdlingResource.create(
-                "okhttp",
-                OkHttpProvider.getOkHttpClient()
-            )
-        )
     }
 
     @After
@@ -55,7 +60,16 @@ class MainActivityTest {
 
     @Test
     fun mainActivityTest() {
-        val appCompatEditText = Espresso.onView(
+        mockWebServer.dispatcher = object : Dispatcher() {
+            override fun dispatch(request: RecordedRequest): MockResponse {
+                return MockResponse()
+                    .setResponseCode(200)
+                    .setBody(FileReader.readStringFromFile("success_response.json"))
+            }
+        }
+
+        mActivityTestRule.launchActivity(null)
+        val appCompatEditText = onView(
             Matchers.allOf(
                 ViewMatchers.withId(R.id.query_edit_text),
                 childAtPosition(
@@ -70,7 +84,9 @@ class MainActivityTest {
         )
         appCompatEditText.perform(ViewActions.replaceText("octo"), ViewActions.closeSoftKeyboard())
 
-        val linearLayout = Espresso.onView(
+        Thread.sleep(1000);
+
+        val linearLayout = onView(
             Matchers.allOf(
                 childAtPosition(
                     Matchers.allOf(

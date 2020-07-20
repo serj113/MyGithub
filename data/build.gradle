@@ -38,6 +38,7 @@ dependencies {
     // Retrofit
     api "com.squareup.retrofit2:retrofit:$retrofit_version"
     api "com.squareup.retrofit2:converter-moshi:$retrofit_version"
+    api "com.squareup.okhttp3:logging-interceptor:4.8.0"
 
     // Hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"

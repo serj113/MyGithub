@@ -21,9 +21,9 @@ class ApiModule {
 
     @Provides
     @Singleton
-    internal fun provideRetrofitInterface(): Retrofit {
+    internal fun provideRetrofitInterface(url: String): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(BuildConfig.BASE_URL)
+            .baseUrl(url)
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
     }
