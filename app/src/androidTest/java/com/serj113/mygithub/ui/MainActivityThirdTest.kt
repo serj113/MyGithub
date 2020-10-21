@@ -9,62 +9,76 @@ import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.runner.AndroidJUnit4
-import com.serj113.data.di.UrlModule
-import com.serj113.mygithub.FileReader
+import com.serj113.data.di.RepositoryModule
+import com.serj113.domain.base.Entity
+import com.serj113.domain.entity.User
+import com.serj113.domain.repository.UserRepository
 import com.serj113.mygithub.R
-import dagger.hilt.android.testing.BindValue
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
-import okhttp3.mockwebserver.Dispatcher
-import okhttp3.mockwebserver.MockResponse
-import okhttp3.mockwebserver.MockWebServer
-import okhttp3.mockwebserver.RecordedRequest
+import io.mockk.coEvery
+import io.mockk.mockk
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers
 import org.hamcrest.TypeSafeMatcher
 import org.hamcrest.core.IsInstanceOf
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import javax.inject.Singleton
 
 @RunWith(AndroidJUnit4::class)
-@UninstallModules(UrlModule::class)
+@UninstallModules(RepositoryModule::class)
 @HiltAndroidTest
-class MainActivityTest {
+class MainActivityThirdTest {
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
 
-    @BindValue
-    @JvmField
-    val testingUrl: String = "http://127.0.0.1:8080"
-
-    private val mockWebServer = MockWebServer()
+    @Module
+    @InstallIn(ApplicationComponent::class)
+    object RepositoryModule {
+        @Provides
+        @Singleton
+        fun provideUserRepository(): UserRepository {
+            return mockUserRepository
+        }
+    }
 
     @Before
     fun setup() {
         hiltRule.inject()
-        mockWebServer.start(8080)
-    }
-
-    @After
-    fun teardown() {
-        mockWebServer.shutdown()
     }
 
     @Test
     fun mainActivityTest() {
-        mockWebServer.dispatcher = object : Dispatcher() {
-            override fun dispatch(request: RecordedRequest): MockResponse {
-                return MockResponse()
-                    .setResponseCode(200)
-                    .setBody(FileReader.readStringFromFile("success_response.json"))
-            }
-        }
-
+        coEvery { mockUserRepository.searchUser(any(), any(), any()) } returns flow {
+            emit(Entity.loading<List<User>>())
+            val users = listOf(
+                User(
+                    116087,
+                    "octo",
+                    "https://avatars0.githubusercontent.com/u/116087?v=4",
+                    "https://api.github.com/users/octo"
+                ),
+                User(
+                    583231,
+                    "octocat",
+                    "https://avatars3.githubusercontent.com/u/583231?v=4",
+                    "https://api.github.com/users/octocat"
+                )
+            )
+            emit(Entity.success(users))
+        }.flowOn(Dispatchers.Default)
         ActivityScenario.launch(MainActivity::class.java)
         val appCompatEditText = onView(
             Matchers.allOf(
@@ -117,5 +131,9 @@ class MainActivityTest {
                         && view == parent.getChildAt(position)
             }
         }
+    }
+
+    companion object {
+        val mockUserRepository = mockk<UserRepository>()
     }
 }
